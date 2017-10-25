@@ -1,6 +1,4 @@
 CREATE TABLE IF NOT EXISTS `whitelist` (
-  `firstname` text,
-  `lastname` text,
   `identifier` varchar(255) NOT NULL,
   `last_connexion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `ban_reason` text,
