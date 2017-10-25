@@ -4,3 +4,5 @@ server_script {
 }
 
 client_script 'whitelist_c.lua'
+
+version '1.0.0'
