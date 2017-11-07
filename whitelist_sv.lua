@@ -24,13 +24,16 @@ local inConnexion = {}
 local isConnexionOpened = false
 
 AddEventHandler('onMySQLReady', function ()
+  loadWhiteList()
+end)
+
+function loadWhiteList ()
 	MySQL.Async.fetchAll(
-		'SELECT * FROM `whitelist`',
-		{},
-		function(users)
-
-			for i=1, #users, 1 do
-
+    'SELECT * FROM whitelist',
+    {},
+    function (users)
+      WhiteList = {}
+      for i=1, #users, 1 do
 				local isVip = false
 
 				if(users[i].vip == 1) then
@@ -45,11 +48,11 @@ AddEventHandler('onMySQLReady', function ()
 					ban_until 		= users[i].ban_until,
 					vip 			= isVip
 				})
-			end
+      end
+    end
+  )
+end
 
-		end
-	)
-end)
 
 AddEventHandler('playerDropped', function(reason)
 	local _source = source
@@ -140,6 +143,7 @@ AddEventHandler("playerConnecting", function(playerName, reason, deferrals)
 			break
 		end
 	end
+
 	if not found then
 		reason(notwhitelisted)
 		deferrals.done(notwhitelisted)
@@ -265,7 +269,6 @@ end
 checkOnlinePlayers()
 
 
-
 function stringsplit(inputstr, sep)
   if sep == nil then
       sep = "%s"
@@ -277,3 +280,10 @@ function stringsplit(inputstr, sep)
   end
   return t
 end
+
+TriggerEvent('es:addGroupCommand', 'loadwl', 'admin', function (source, args, user)
+  loadWhiteList()
+  TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "WHITELIST LOADED")
+end, function (source, args, user)
+  TriggerClientEvent('chatMessage', source, 'SYSTEM', { 255, 0, 0 }, 'Insufficienct permissions!')
+end, { help = 'Recharger la Whitelist' })
